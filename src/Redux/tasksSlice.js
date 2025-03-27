@@ -1,36 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const slice = createSlice({
+const tasksSlice = createSlice({
   name: 'tasks',
   initialState: {
-    items: [
-      { id: 0, text: 'Learn HTML and CSS', completed: true },
-      { id: 1, text: 'Get good at JavaScript', completed: true },
-      { id: 2, text: 'Master React', completed: false },
-      { id: 3, text: 'Discover Redux', completed: false },
-      { id: 4, text: 'Build amazing apps', completed: false },
-    ],
+    items: [],
+    isLoading: false,
+    error: null,
   },
   reducers: {
-    addTask: (state, action) => {
-      state.items.push(action.payload);
+    fetchInProgress(state) {
+      state.isLoading = true;
     },
-
-    deleteTask: (state, action) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
+    fetchSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+      state.items = action.payload;
     },
-
-    toggleCompleted: (state, action) => {
-      for (const task of state.items) {
-        if (task.id === action.payload) {
-          task.completed = !task.completed;
-          break;
-        }
-      }
+    fetchError(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
 
-export const { addTask, deleteTask, toggleCompleted } = slice.actions;
+export const { fetchInProgress, fetchSuccess, fetchError } = tasksSlice.actions;
 
-export default slice.reducer;
+export default tasksSlice.reducer;
